@@ -223,7 +223,7 @@ const SignUpView = () => {
       </Card>
 
       <div className='text-muted-foreground [&_a]:hover:text-primary text-center text-xs font-medium text-balance'>
-        <p>By clicking &quot;Sign In&quot;, you agree to our</p>
+        <p>By clicking &quot;Create Account&quot;, you agree to our</p>
         <p>
           <a href='/terms' target='_blank' rel='noreferrer'>
             Terms of Service
