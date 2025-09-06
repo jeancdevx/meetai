@@ -59,7 +59,8 @@ const SignUpView = () => {
       {
         name: data.name,
         email: data.email,
-        password: data.password
+        password: data.password,
+        callbackURL: '/'
       },
       {
         onSuccess: () => {
@@ -71,6 +72,29 @@ const SignUpView = () => {
           setPending(false)
           setError(error.message)
           toast.error('Failed to sign up.')
+        }
+      }
+    )
+  }
+
+  const onSocial = (provider: 'google' | 'github') => {
+    setError(null)
+    setPending(true)
+
+    authClient.signIn.social(
+      {
+        provider,
+        callbackURL: '/'
+      },
+      {
+        onSuccess: () => {
+          setPending(false)
+          toast.success('Successfully signed in!')
+        },
+        onError: ({ error }) => {
+          setPending(false)
+          setError(error.message)
+          toast.error('Failed to sign in.')
         }
       }
     )
@@ -189,11 +213,37 @@ const SignUpView = () => {
                 </div>
 
                 <div className='grid grid-cols-2 gap-4'>
-                  <Button variant='outline' type='button' disabled={pending}>
-                    Google
+                  <Button
+                    variant='outline'
+                    type='button'
+                    disabled={pending}
+                    onClick={() => {
+                      onSocial('google')
+                    }}
+                  >
+                    <Image
+                      src='/google.svg'
+                      alt='Google Logo'
+                      width={16}
+                      height={16}
+                    />
+                    <span className='font-semibold'>Google</span>
                   </Button>
-                  <Button variant='outline' type='button' disabled={pending}>
-                    GitHub
+                  <Button
+                    variant='outline'
+                    type='button'
+                    disabled={pending}
+                    onClick={() => {
+                      onSocial('github')
+                    }}
+                  >
+                    <Image
+                      src='/github.svg'
+                      alt='GitHub Logo'
+                      width={16}
+                      height={16}
+                    />
+                    <span className='font-semibold'>GitHub</span>
                   </Button>
                 </div>
 
