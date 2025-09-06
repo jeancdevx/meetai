@@ -32,7 +32,7 @@ const DashboardUserButton = () => {
     })
   }
 
-  if (isPending ?? !session?.user) return null
+  if (isPending || !session?.user) return null
 
   return (
     <DropdownMenu>
