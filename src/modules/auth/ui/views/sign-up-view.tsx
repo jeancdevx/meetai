@@ -265,7 +265,7 @@ const SignUpView = () => {
             </form>
           </Form>
 
-          <div className='relative hidden flex-col items-center justify-center gap-y-4 bg-radial from-green-700 to-green-900 lg:flex'>
+          <div className='from-sidebar-accent to-sidebar relative hidden flex-col items-center justify-center gap-y-4 bg-radial lg:flex'>
             <Image src='/logo.svg' alt='MeetAI Logo' width={92} height={92} />
             <p className='text-2xl font-semibold text-white'>MeetAI</p>
           </div>
