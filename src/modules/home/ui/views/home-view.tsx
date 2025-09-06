@@ -13,7 +13,7 @@ const HomeView = () => {
 
   return (
     <div>
-      <div>Hello {session?.user.name}</div>
+      <div>Hello {session?.user?.name}</div>
 
       <Button
         onClick={() =>
