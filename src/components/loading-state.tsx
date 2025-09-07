@@ -7,7 +7,7 @@ interface LoadingStateProps {
 
 const LoadingState = ({ title, description }: LoadingStateProps) => {
   return (
-    <div className='flex flex-1/2 items-center justify-center px-8 py-4'>
+    <div className='flex flex-1 items-center justify-center px-8 py-4'>
       <div className='bg-background flex flex-col items-center justify-center gap-y-6 rounded-lg p-10 shadow-sm'>
         <Loader2Icon className='text-primary size-6 animate-spin' />
 
