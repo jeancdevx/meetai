@@ -7,7 +7,6 @@ import '@/styles/globals.css'
 
 const font = Nunito({
   subsets: ['latin'],
-  variable: '--font-geist',
   display: 'swap',
   weight: ['400', '700']
 })

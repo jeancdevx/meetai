@@ -1,4 +1,7 @@
-import DashboardSidebar from '@/modules/dashboard/ui/components'
+import {
+  DashboardNavbar,
+  DashboardSidebar
+} from '@/modules/dashboard/ui/components'
 
 import { SidebarProvider } from '@/components/ui/sidebar'
 
@@ -12,6 +15,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <DashboardSidebar />
 
       <main className='bg-muted flex h-screen w-screen flex-col'>
+        <DashboardNavbar />
+
         {children}
       </main>
     </SidebarProvider>
