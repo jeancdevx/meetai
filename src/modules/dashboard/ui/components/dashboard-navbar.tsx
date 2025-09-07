@@ -35,7 +35,7 @@ const DashboardNavbar = () => {
     <>
       <DashboardCommand open={commandOpen} setOpen={setCommandOpen} />
 
-      <nav className='bg-background flex items-center gap-x-2 border-b px-4 py-3'>
+      <nav className='bg-background flex items-center gap-x-2 border-b px-4 py-3 md:px-8'>
         <Button className='size-9' variant='outline' onClick={toggleSidebar}>
           {state === 'collapsed' || isMobile ? (
             <PanelLeftIcon className='size-4' />
