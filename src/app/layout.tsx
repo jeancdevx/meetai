@@ -24,14 +24,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <TRPCReactProvider>
-      <html lang='en'>
-        <body className={`${font.className} antialiased`}>
+    <html lang='en'>
+      <body className={`${font.className} antialiased`}>
+        <TRPCReactProvider>
           {children}
 
           <Toaster richColors theme='light' />
-        </body>
-      </html>
-    </TRPCReactProvider>
+        </TRPCReactProvider>
+      </body>
+    </html>
   )
 }
