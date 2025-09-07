@@ -23,11 +23,11 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
     }
-  }
-  /* session: {
+  },
+  session: {
     cookieCache: {
       enabled: true,
-      maxAge: 5 * 60 // Cache duration in seconds
+      maxAge: 5 * 60
     }
-  } */
+  }
 })
