@@ -139,7 +139,7 @@ const AgentForm = ({ initialValues, onSuccess, onCancel }: AgentFormProps) => {
               Cancel
             </Button>
           )}
-          <Button type='submit' disabled={isPending} className='ml-2'>
+          <Button type='submit' disabled={isPending}>
             {isEdit ? 'Update Agent' : 'Create Agent'}
           </Button>
         </div>
