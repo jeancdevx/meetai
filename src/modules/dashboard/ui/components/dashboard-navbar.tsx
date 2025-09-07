@@ -9,7 +9,7 @@ import { usePlatform } from '@/hooks/use-platform'
 import { Button } from '@/components/ui/button'
 import { useSidebar } from '@/components/ui/sidebar'
 
-import DashboardCommand from './dashboard-command'
+import { DashboardCommand } from './dashboard-command'
 
 const DashboardNavbar = () => {
   const { state, toggleSidebar, isMobile } = useSidebar()
