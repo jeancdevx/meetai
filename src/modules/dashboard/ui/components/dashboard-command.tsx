@@ -26,4 +26,4 @@ const DashboardCommand = ({ open, setOpen }: DashboardCommandProps) => {
   )
 }
 
-export default DashboardCommand
+export { DashboardCommand }
