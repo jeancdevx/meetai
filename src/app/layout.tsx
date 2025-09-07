@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Nunito } from 'next/font/google'
 
+import { TRPCReactProvider } from '@/trpc/client'
+
 import { Toaster } from '@/components/ui/sonner'
 
 import '@/styles/globals.css'
@@ -24,9 +26,11 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${font.className} antialiased`}>
-        {children}
+        <TRPCReactProvider>
+          {children}
 
-        <Toaster richColors theme='light' />
+          <Toaster richColors theme='light' />
+        </TRPCReactProvider>
       </body>
     </html>
   )
