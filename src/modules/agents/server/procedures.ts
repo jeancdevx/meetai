@@ -89,59 +89,35 @@ export const agentsRouter = createTRPCRouter({
     .input(agentsInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id
-      const baseName = input.name.trim()
 
-      const generateUniqueName = async (attempt = 0): Promise<string> => {
-        const candidateName =
-          attempt === 0 ? baseName : `${baseName} ${attempt + 1}`
+      const [existingAgent] = await db
+        .select()
+        .from(agents)
+        .where(and(eq(agents.name, input.name), eq(agents.userId, userId)))
+        .limit(1)
 
-        const [existing] = await db
-          .select({ id: agents.id })
+      if (existingAgent) {
+        const similarAgents = await db
+          .select()
           .from(agents)
-          .where(and(eq(agents.name, candidateName), eq(agents.userId, userId)))
-          .limit(1)
-
-        if (!existing) {
-          return candidateName
+          .where(
+            and(eq(agents.userId, userId), ilike(agents.name, `${input.name}%`))
+          )
+        const similarNames = similarAgents.map(a => a.name)
+        let suffix = 1
+        let newName = `${input.name} (${suffix})`
+        while (similarNames.includes(newName)) {
+          suffix++
+          newName = `${input.name} (${suffix})`
         }
-
-        if (attempt >= 999) {
-          throw new Error('Unable to generate unique agent name')
-        }
-
-        return generateUniqueName(attempt + 1)
+        input.name = newName
       }
 
-      try {
-        const uniqueName = await generateUniqueName()
+      const [newAgent] = await db
+        .insert(agents)
+        .values({ ...input, userId })
+        .returning()
 
-        const [createdAgent] = await db
-          .insert(agents)
-          .values({
-            ...input,
-            name: uniqueName,
-            userId
-          })
-          .returning()
-
-        return createdAgent
-      } catch (error) {
-        if (error instanceof Error && error.message.includes('unique')) {
-          const fallbackName = `${baseName} ${Date.now().toString().slice(-6)}`
-
-          const [createdAgent] = await db
-            .insert(agents)
-            .values({
-              ...input,
-              name: fallbackName,
-              userId
-            })
-            .returning()
-
-          return createdAgent
-        }
-
-        throw error
-      }
+      return newAgent
     })
 })
