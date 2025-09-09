@@ -21,7 +21,7 @@ const DataPagination = ({
 
       <div className='flex items-center justify-end space-x-2 py-4'>
         <Button
-          disabled={page <= 1}
+          disabled={page <= 1 || totalPages === 0}
           variant='outline'
           size='sm'
           onClick={() => onPageChange(Math.max(1, page - 1))}
