@@ -43,7 +43,8 @@ export const columns: ColumnDef<AgentGetOne>[] = [
       >
         <VideoIcon className='text-blue-700' />
         <span className='text-xs font-semibold'>
-          {5} {5 === 1 ? 'Meeting' : 'Meetings'}
+          {row.original.meetingCount}{' '}
+          {row.original.meetingCount === 1 ? 'Meeting' : 'Meetings'}
         </span>
       </Badge>
     )
