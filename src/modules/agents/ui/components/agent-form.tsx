@@ -1,7 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -34,13 +32,40 @@ interface AgentFormProps {
 }
 
 const AgentForm = ({ initialValues, onSuccess, onCancel }: AgentFormProps) => {
-  const router = useRouter()
-
   const trpc = useTRPC()
   const queryClient = useQueryClient()
 
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
+      onMutate: () => {
+        toast.loading('Creating agent...', { id: 'create-agent' })
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          trpc.agents.getMany.queryOptions({})
+        )
+
+        // todo: invalidate free tier usage
+
+        onSuccess?.()
+
+        toast.success('Agent created', { id: 'create-agent' })
+      },
+      onError: error => {
+        toast.error(`Error creating agent: ${error.message}`, {
+          id: 'create-agent'
+        })
+
+        // todo: check if error code is "forbidden"
+      }
+    })
+  )
+
+  const updateAgent = useMutation(
+    trpc.agents.update.mutationOptions({
+      onMutate: () => {
+        toast.loading('Updating agent...', { id: 'update-agent' })
+      },
       onSuccess: async () => {
         await queryClient.invalidateQueries(
           trpc.agents.getMany.queryOptions({})
@@ -53,12 +78,13 @@ const AgentForm = ({ initialValues, onSuccess, onCancel }: AgentFormProps) => {
         }
 
         onSuccess?.()
-        toast.success('Agent created successfully')
+
+        toast.success('Agent updated', { id: 'update-agent' })
       },
       onError: error => {
-        toast.error(error.message ?? 'Something went wrong creating the agent')
-
-        // todo: check if error code is "forbidden"
+        toast.error(`Error updating agent: ${error.message}`, {
+          id: 'update-agent'
+        })
       }
     })
   )
@@ -72,7 +98,7 @@ const AgentForm = ({ initialValues, onSuccess, onCancel }: AgentFormProps) => {
   })
 
   const isEdit = !!initialValues?.id
-  const isPending = createAgent.isPending
+  const isPending = createAgent.isPending || updateAgent.isPending
 
   const onSubmit = (values: z.infer<typeof agentsInsertSchema>) => {
     const trimmedValues = {
@@ -82,7 +108,12 @@ const AgentForm = ({ initialValues, onSuccess, onCancel }: AgentFormProps) => {
     }
 
     if (isEdit) {
-      console.log('edit', trimmedValues)
+      if (!initialValues?.id) {
+        toast.error('Error updating agent: missing agent ID')
+        return
+      }
+
+      updateAgent.mutate({ id: initialValues.id, ...trimmedValues })
     } else {
       createAgent.mutate(trimmedValues)
     }

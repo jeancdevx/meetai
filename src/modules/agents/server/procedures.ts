@@ -12,7 +12,7 @@ import { db } from '@/db'
 import { agents } from '@/db/schema'
 import { createTRPCRouter, protectedProcedure } from '@/trpc/init'
 
-import { agentsInsertSchema } from '../schemas'
+import { agentsInsertSchema, agentsUpdateSchema } from '../schemas'
 
 export const agentsRouter = createTRPCRouter({
   getOne: protectedProcedure
@@ -119,5 +119,54 @@ export const agentsRouter = createTRPCRouter({
         .returning()
 
       return newAgent
+    }),
+  update: protectedProcedure
+    .input(agentsUpdateSchema)
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id
+
+      const [conflictingAgent] = await db
+        .select()
+        .from(agents)
+        .where(
+          and(
+            eq(agents.userId, userId),
+            eq(agents.name, input.name),
+            sql`"${agents.id}" <> ${input.id}`
+          )
+        )
+        .limit(1)
+
+      if (conflictingAgent) {
+        throw new Error('Another agent with this name already exists')
+      }
+
+      const [updatedAgent] = await db
+        .update(agents)
+        .set(input)
+        .where(and(eq(agents.id, input.id), eq(agents.userId, userId)))
+        .returning()
+
+      if (!updatedAgent) {
+        throw new Error('Agent not found or access denied')
+      }
+
+      return updatedAgent
+    }),
+  remove: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id
+
+      const [removedAgent] = await db
+        .delete(agents)
+        .where(and(eq(agents.id, input.id), eq(agents.userId, userId)))
+        .returning()
+
+      if (!removedAgent) {
+        throw new Error('Agent not found or access denied')
+      }
+
+      return removedAgent
     })
 })
