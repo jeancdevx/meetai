@@ -25,8 +25,12 @@ const AgentIdView = ({ agentId }: AgentIdViewProps) => {
       <AgentIdViewHeader
         agentId={agentId}
         agentName={data.name}
-        onEdit={() => {}}
-        onRemove={() => {}}
+        onEdit={() => {
+          // TODO: Implement edit agent functionality
+        }}
+        onRemove={() => {
+          // TODO: Implement remove agent functionality
+        }}
       />
 
       <div className='rounded-lg border bg-white'>
