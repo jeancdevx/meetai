@@ -53,7 +53,7 @@ const AgentIdViewHeader = ({
           <BreadcrumbItem>
             <BreadcrumbLink
               asChild
-              className='text-foreground text-xl font-semibold'
+              className='text-foreground text-xl font-semibold capitalize'
             >
               <span>{agentName}</span>
             </BreadcrumbLink>
