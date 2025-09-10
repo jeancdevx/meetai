@@ -113,7 +113,7 @@ const AgentIdView = ({ agentId }: AgentIdViewProps) => {
 
             <div className='flex flex-col gap-y-4'>
               <p className='text-lg font-semibold'>Instructions</p>
-              <p className='text-sm text-neutral-700 capitalize'>
+              <p className='text-sm text-neutral-700'>
                 {data.instructions}
               </p>
             </div>
