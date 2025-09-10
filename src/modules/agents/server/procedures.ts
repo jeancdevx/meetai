@@ -24,7 +24,7 @@ export const agentsRouter = createTRPCRouter({
         .select({
           ...getTableColumns(agents),
           // todo: replace with actual meeting count
-          meetingCount: sql`5`
+          meetingCount: sql<number>`5`
         })
         .from(agents)
         .where(and(eq(agents.id, input.id), eq(agents.userId, userId)))
