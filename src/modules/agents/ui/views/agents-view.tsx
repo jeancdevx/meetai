@@ -9,8 +9,8 @@ import { useAgentsFilters } from '@/hooks/use-agents-filters'
 
 import { columns } from '@/modules/agents/ui/components/columns'
 import DataPagination from '@/modules/agents/ui/components/data-pagination'
-import { DataTable } from '@/modules/agents/ui/components/data-table'
 
+import { DataTable } from '@/components/data-table'
 import EmptyState from '@/components/empty-state'
 
 const AgentsView = () => {
