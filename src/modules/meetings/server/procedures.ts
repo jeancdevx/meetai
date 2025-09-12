@@ -12,6 +12,8 @@ import { db } from '@/db'
 import { meetings } from '@/db/schema'
 import { createTRPCRouter, protectedProcedure } from '@/trpc/init'
 
+import { meetingsInsertSchema, meetingsUpdateSchema } from '../schemas'
+
 export const meetingsRouter = createTRPCRouter({
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
@@ -78,5 +80,36 @@ export const meetingsRouter = createTRPCRouter({
         total: total.count,
         totalPages
       }
+    }),
+  create: protectedProcedure
+    .input(meetingsInsertSchema)
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id
+
+      const [newMeeting] = await db
+        .insert(meetings)
+        .values({ ...input, userId })
+        .returning()
+
+      // todo: create stream call, upseart stream users
+
+      return newMeeting
+    }),
+  update: protectedProcedure
+    .input(meetingsUpdateSchema)
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id
+
+      const [updatedMeeting] = await db
+        .update(meetings)
+        .set(input)
+        .where(and(eq(meetings.id, input.id), eq(meetings.userId, userId)))
+        .returning()
+
+      if (!updatedMeeting) {
+        throw new Error('Meeting not found or access denied')
+      }
+
+      return updatedMeeting
     })
 })
