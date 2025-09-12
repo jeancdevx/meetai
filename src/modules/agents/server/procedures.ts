@@ -1,4 +1,13 @@
-import { and, count, desc, eq, getTableColumns, ilike, sql } from 'drizzle-orm'
+import {
+  and,
+  count,
+  desc,
+  eq,
+  getTableColumns,
+  ilike,
+  ne,
+  sql
+} from 'drizzle-orm'
 import { z } from 'zod'
 
 import {
@@ -132,7 +141,7 @@ export const agentsRouter = createTRPCRouter({
           and(
             eq(agents.userId, userId),
             eq(agents.name, input.name),
-            sql`"${agents.id}" <> ${input.id}`
+            ne(agents.id, input.id)
           )
         )
         .limit(1)
