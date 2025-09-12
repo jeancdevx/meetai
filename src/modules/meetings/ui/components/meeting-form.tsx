@@ -138,7 +138,7 @@ const MeetingForm = ({
     <>
       <NewAgentDialog
         open={openNewAgentDialog}
-        onOpenChange={() => setOpenNewAgentDialog(false)}
+        onOpenChange={setOpenNewAgentDialog}
       />
 
       <Form {...form}>
