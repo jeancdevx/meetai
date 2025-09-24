@@ -73,7 +73,7 @@ const MeetingIdViewHeader = ({
             className='text-xs font-semibold text-black'
           >
             <PencilIcon className='size-4 text-black' />
-            Edit agent
+            Edit meeting
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={onRemove}
