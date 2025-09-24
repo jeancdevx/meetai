@@ -148,7 +148,7 @@ const MeetingForm = ({
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Agent Name</FormLabel>
+                <FormLabel>Meeting Name</FormLabel>
                 <FormControl>
                   <Input
                     placeholder='e.g. "Math consultations"'

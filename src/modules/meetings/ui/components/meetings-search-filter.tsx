@@ -6,12 +6,12 @@ import { SearchIcon } from 'lucide-react'
 
 import debounce from 'debounce'
 
-import { useAgentsFilters } from '@/hooks/use-agents-filters'
+import { useMeetingsFilters } from '@/hooks/use-meetings-filters'
 
 import { Input } from '@/components/ui/input'
 
-const AgentsSearchFilter = () => {
-  const [filters, setFilters] = useAgentsFilters()
+const MeetingsSearchFilter = () => {
+  const [filters, setFilters] = useMeetingsFilters()
   const [localSearch, setLocalSearch] = useState(filters.search)
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const AgentsSearchFilter = () => {
   return (
     <div className='relative'>
       <Input
-        placeholder='Search agents...'
+        placeholder='Search meetings...'
         className='h-9 w-[200px] bg-white pl-7'
         value={localSearch}
         onChange={handleSearchChange}
@@ -51,4 +51,4 @@ const AgentsSearchFilter = () => {
   )
 }
 
-export { AgentsSearchFilter }
+export { MeetingsSearchFilter }
