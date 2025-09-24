@@ -16,6 +16,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,21 +24,19 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
-import { Button } from './ui/button'
-
-interface AgentIdViewHeaderProps {
-  agentId: string
-  agentName: string
+interface MeetingIdViewHeaderProps {
+  // meetingId: string
+  meetingName: string
   onEdit: () => void
   onRemove: () => void
 }
 
-const AgentIdViewHeader = ({
-  agentId,
-  agentName,
+const MeetingIdViewHeader = ({
+  // meetingId,
+  meetingName,
   onEdit,
   onRemove
-}: AgentIdViewHeaderProps) => {
+}: MeetingIdViewHeaderProps) => {
   return (
     <div className='flex items-center justify-between'>
       <Breadcrumb>
@@ -55,7 +54,7 @@ const AgentIdViewHeader = ({
               asChild
               className='text-foreground text-xl font-semibold capitalize'
             >
-              <span>{agentName}</span>
+              <span>{meetingName}</span>
             </BreadcrumbLink>
           </BreadcrumbItem>
         </BreadcrumbList>
@@ -89,4 +88,4 @@ const AgentIdViewHeader = ({
   )
 }
 
-export { AgentIdViewHeader }
+export { MeetingIdViewHeader }

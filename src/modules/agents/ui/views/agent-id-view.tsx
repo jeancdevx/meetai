@@ -16,7 +16,8 @@ import { toast } from 'sonner'
 import { useTRPC } from '@/trpc/client'
 import { useConfirm } from '@/hooks/use-confirm'
 
-import { AgentIdViewHeader } from '@/components/agent-id-view-header'
+import { AgentIdViewHeader } from '@/modules/agents/ui/components/agent-id-view-header'
+
 import { GeneratedAvatar } from '@/components/generated-avatar'
 import { Badge } from '@/components/ui/badge'
 
@@ -85,7 +86,7 @@ const AgentIdView = ({ agentId }: AgentIdViewProps) => {
 
       <div className='flex flex-1 flex-col gap-y-4 p-4 md:px-8'>
         <AgentIdViewHeader
-          agentId={agentId}
+          // agentId={agentId}
           agentName={data.name}
           onEdit={() => setUpdateAgentDialogOpen(true)}
           onRemove={handleRemove}
@@ -113,9 +114,7 @@ const AgentIdView = ({ agentId }: AgentIdViewProps) => {
 
             <div className='flex flex-col gap-y-4'>
               <p className='text-lg font-semibold'>Instructions</p>
-              <p className='text-sm text-neutral-700'>
-                {data.instructions}
-              </p>
+              <p className='text-sm text-neutral-700'>{data.instructions}</p>
             </div>
           </div>
         </div>

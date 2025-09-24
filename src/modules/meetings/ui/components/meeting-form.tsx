@@ -216,7 +216,7 @@ const MeetingForm = ({
               </Button>
             )}
             <Button type='submit' disabled={isPending}>
-              {isEdit ? 'Update Agent' : 'Create Agent'}
+              {isEdit ? 'Update Meeting' : 'Create Meeting'}
             </Button>
           </div>
         </form>
