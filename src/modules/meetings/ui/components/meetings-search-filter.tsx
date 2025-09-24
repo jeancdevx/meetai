@@ -41,7 +41,7 @@ const MeetingsSearchFilter = () => {
   return (
     <div className='relative'>
       <Input
-        placeholder='Search agents...'
+        placeholder='Search meetings...'
         className='h-9 w-[200px] bg-white pl-7'
         value={localSearch}
         onChange={handleSearchChange}
