@@ -59,7 +59,7 @@ const options = [
     children: (
       <div className='flex items-center gap-x-2 capitalize'>
         <CircleXIcon className='stroke-[2.5]' />
-        Canceled
+        Cancelled
       </div>
     )
   }
