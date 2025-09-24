@@ -23,9 +23,18 @@ export const meetingsRouter = createTRPCRouter({
 
       const [existingMeeting] = await db
         .select({
-          ...getTableColumns(meetings)
+          ...getTableColumns(meetings),
+          agent: agents,
+          duration: sql<number>`
+              CASE
+                WHEN ${meetings.startedAt} IS NOT NULL AND ${meetings.endedAt} IS NOT NULL
+                THEN EXTRACT(EPOCH FROM (${meetings.endedAt} - ${meetings.startedAt}))
+                ELSE NULL
+              END
+            `.as('duration')
         })
         .from(meetings)
+        .innerJoin(agents, eq(agents.id, meetings.agentId))
         .where(and(eq(meetings.id, input.id), eq(meetings.userId, userId)))
 
       if (!existingMeeting) {
@@ -136,5 +145,21 @@ export const meetingsRouter = createTRPCRouter({
       }
 
       return updatedMeeting
+    }),
+  remove: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id
+
+      const [deletedMeeting] = await db
+        .delete(meetings)
+        .where(and(eq(meetings.id, input.id), eq(meetings.userId, userId)))
+        .returning()
+
+      if (!deletedMeeting) {
+        throw new Error('Meeting not found or access denied')
+      }
+
+      return deletedMeeting
     })
 })
