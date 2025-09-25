@@ -14,7 +14,11 @@ import { toast } from 'sonner'
 import { useTRPC } from '@/trpc/client'
 import { useConfirm } from '@/hooks/use-confirm'
 
+import { ActiveState } from '../components/active-state'
+import { CancelledState } from '../components/cancelled-state'
 import { MeetingIdViewHeader } from '../components/meeting-id-view-header'
+import { ProcessingState } from '../components/processing-state'
+import { UpcomingState } from '../components/upcoming-state'
 import UpdateMeetingDialog from '../components/update-meeting-dialog'
 
 interface MeetingIdViewProps {
@@ -69,6 +73,12 @@ const MeetingIdView = ({ meetingId }: MeetingIdViewProps) => {
     await removeMeeting.mutateAsync({ id: meetingId })
   }
 
+  const isActive = data.status === 'active'
+  const isUpcoming = data.status === 'upcoming'
+  const isCancelled = data.status === 'cancelled'
+  const isCompleted = data.status === 'completed'
+  const isProcessing = data.status === 'processing'
+
   return (
     <>
       <RemoveConfirmation />
@@ -84,7 +94,17 @@ const MeetingIdView = ({ meetingId }: MeetingIdViewProps) => {
           onEdit={() => setUpdateMeetingDialogOpen(true)}
           onRemove={handleRemoveMeeting}
         />
-        {JSON.stringify(data, null, 2)}
+        {isCancelled && <CancelledState />}
+        {isCompleted && <div>completed</div>}
+        {isProcessing && <ProcessingState />}
+        {isUpcoming && (
+          <UpcomingState
+            meetingId={meetingId}
+            onCancelMeeting={handleRemoveMeeting}
+            isCancelling={false} // todo: disable while removing
+          />
+        )}
+        {isActive && <ActiveState meetingId={meetingId} />}
       </div>
     </>
   )
