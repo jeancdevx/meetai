@@ -3,13 +3,18 @@ import Image from 'next/image'
 interface ErrorStateProps {
   title: string
   description: string
+  image?: string
 }
 
-const EmptyState = ({ title, description }: ErrorStateProps) => {
+const EmptyState = ({
+  title,
+  description,
+  image = '/empty.svg'
+}: ErrorStateProps) => {
   return (
     <div className='flex flex-col items-center justify-center px-8 py-4'>
       <Image
-        src='/empty.svg'
+        src={image}
         alt='Empty State placeholder'
         width={240}
         height={240}
