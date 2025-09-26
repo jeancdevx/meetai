@@ -24,14 +24,14 @@ export default async function MeetingIdPage({ params }: MeetingIdPageProps) {
 
   if (!session) redirect('/sign-in')
 
-  const queryCliente = getQueryClient()
+  const queryClient = getQueryClient()
 
-  void queryCliente.prefetchQuery(
+  void queryClient.prefetchQuery(
     trpc.meetings.getOne.queryOptions({ id: meetingId })
   )
 
   return (
-    <HydrationBoundary state={dehydrate(queryCliente)}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <Suspense fallback={<div>Loading...</div>}>
         <ErrorBoundary fallback={<div>Something went wrong</div>}>
           <CallView meetingId={meetingId} />
