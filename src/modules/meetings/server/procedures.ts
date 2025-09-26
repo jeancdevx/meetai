@@ -11,11 +11,41 @@ import {
 import { db } from '@/db'
 import { agents, meetings } from '@/db/schema'
 import { createTRPCRouter, protectedProcedure } from '@/trpc/init'
+import { generateAvatarUri } from '@/lib/avatar'
+import { streamVideo } from '@/lib/stream-video'
 
 import { meetingsInsertSchema, meetingsUpdateSchema } from '../schemas'
 import { MeetingStatus } from '../types'
 
 export const meetingsRouter = createTRPCRouter({
+  generateToken: protectedProcedure.mutation(async ({ ctx }) => {
+    const user = ctx.session.user
+
+    await streamVideo.upsertUsers([
+      {
+        id: user.id,
+        name: user.name,
+        role: 'admin',
+        image:
+          user.image ??
+          generateAvatarUri({
+            seed: user.name,
+            variant: 'initials'
+          })
+      }
+    ])
+
+    const expirationTime = Math.floor(Date.now() / 1000) + 3600 // Token valid for 1 hour
+    const issuedAt = Math.floor(Date.now() / 1000) - 60
+
+    const token = streamVideo.generateUserToken({
+      user_id: user.id,
+      exp: expirationTime,
+      validity_in_seconds: issuedAt
+    })
+
+    return token
+  }),
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -126,6 +156,49 @@ export const meetingsRouter = createTRPCRouter({
         .returning()
 
       // todo: create stream call, upseart stream users
+      const call = streamVideo.video.call('default', newMeeting.id)
+
+      await call.create({
+        data: {
+          created_by_id: userId,
+          custom: {
+            meetingId: newMeeting.id,
+            meetingName: newMeeting.name
+          },
+          settings_override: {
+            transcription: {
+              language: 'en',
+              mode: 'auto-on',
+              closed_caption_mode: 'auto-on'
+            },
+            recording: {
+              mode: 'auto-on',
+              quality: '1080p'
+            }
+          }
+        }
+      })
+
+      const [existingAgent] = await db
+        .select()
+        .from(agents)
+        .where(eq(agents.id, newMeeting.agentId))
+
+      if (!existingAgent) {
+        throw new Error('Agent not found or access denied')
+      }
+
+      await streamVideo.upsertUsers([
+        {
+          id: existingAgent.id,
+          name: existingAgent.name,
+          role: 'user',
+          image: generateAvatarUri({
+            seed: existingAgent.name,
+            variant: 'botttsNeutral'
+          })
+        }
+      ])
 
       return newMeeting
     }),
