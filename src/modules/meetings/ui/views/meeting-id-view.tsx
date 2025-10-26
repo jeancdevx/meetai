@@ -16,6 +16,7 @@ import { useConfirm } from '@/hooks/use-confirm'
 
 import { ActiveState } from '../components/active-state'
 import { CancelledState } from '../components/cancelled-state'
+import { CompletedState } from '../components/completed-state'
 import { MeetingIdViewHeader } from '../components/meeting-id-view-header'
 import { ProcessingState } from '../components/processing-state'
 import { UpcomingState } from '../components/upcoming-state'
@@ -95,7 +96,7 @@ const MeetingIdView = ({ meetingId }: MeetingIdViewProps) => {
           onRemove={handleRemoveMeeting}
         />
         {isCancelled && <CancelledState />}
-        {isCompleted && <div>completed</div>}
+        {isCompleted && <CompletedState data={data} />}
         {isProcessing && <ProcessingState />}
         {isUpcoming && (
           <UpcomingState
