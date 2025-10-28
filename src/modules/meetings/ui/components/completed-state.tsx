@@ -24,6 +24,9 @@ import { MeetingGetOne } from '../../types'
 
 import 'katex/dist/katex.min.css'
 
+import { ChatProvider } from './chat-provider'
+import { Transcript } from './transcript'
+
 interface CompletedStateProps {
   data: MeetingGetOne
 }
@@ -70,16 +73,6 @@ const CompletedState = ({ data }: CompletedStateProps) => {
             <ScrollBar orientation='horizontal' />
           </ScrollArea>
         </div>
-
-        <TabsContent value='recording'>
-          <div className='rounded-lg border bg-white px-4 py-5'>
-            <video
-              src={data.recordingUrl!}
-              controls
-              className='aspect-video w-full rounded-lg'
-            />
-          </div>
-        </TabsContent>
 
         <TabsContent value='summary'>
           <div className='rounded-lg border bg-white'>
@@ -185,6 +178,24 @@ const CompletedState = ({ data }: CompletedStateProps) => {
               </div>
             </div>
           </div>
+        </TabsContent>
+
+        <TabsContent value='transcript'>
+          <Transcript meetingId={data.id} />
+        </TabsContent>
+
+        <TabsContent value='recording'>
+          <div className='rounded-lg border bg-white px-4 py-5'>
+            <video
+              src={data.recordingUrl!}
+              controls
+              className='aspect-video w-full rounded-lg'
+            />
+          </div>
+        </TabsContent>
+
+        <TabsContent value='chat'>
+          <ChatProvider meetingId={data.id} meetingName={data.name} />
         </TabsContent>
       </Tabs>
     </div>
