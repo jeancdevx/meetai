@@ -83,7 +83,7 @@ const DashboardUserButton = () => {
             <Button
               variant='outline'
               className='text-sm font-semibold'
-              onClick={() => {}}
+              onClick={() => authClient.customer.portal()}
             >
               Billing
               <CreditCardIcon className='mr-2 size-4 stroke-[2.5] opacity-50' />
@@ -142,7 +142,10 @@ const DashboardUserButton = () => {
         <DropdownMenuSeparator />
 
         <div className='flex flex-col gap-1'>
-          <DropdownMenuItem className='flex cursor-pointer items-center justify-between text-xs font-semibold'>
+          <DropdownMenuItem
+            className='flex cursor-pointer items-center justify-between text-xs font-semibold'
+            onSelect={() => authClient.customer.portal()}
+          >
             Billing
             <CreditCardIcon className='size-4 stroke-[2.5] opacity-50' />
           </DropdownMenuItem>
