@@ -20,7 +20,11 @@ import {
 
 import { db } from '@/db'
 import { agents, meetings, user } from '@/db/schema'
-import { createTRPCRouter, protectedProcedure } from '@/trpc/init'
+import {
+  createTRPCRouter,
+  premiumProcedure,
+  protectedProcedure
+} from '@/trpc/init'
 import { generateAvatarUri } from '@/lib/avatar'
 import { streamChat } from '@/lib/stream-chat'
 import { streamVideo } from '@/lib/stream-video'
@@ -156,7 +160,7 @@ export const meetingsRouter = createTRPCRouter({
         totalPages
       }
     }),
-  create: protectedProcedure
+  create: premiumProcedure('meetings')
     .input(meetingsInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id
@@ -177,7 +181,7 @@ export const meetingsRouter = createTRPCRouter({
           },
           settings_override: {
             transcription: {
-              language: 'en',
+              language: 'es',
               mode: 'auto-on',
               closed_caption_mode: 'auto-on'
             },

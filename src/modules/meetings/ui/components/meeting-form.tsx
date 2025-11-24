@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import { useRouter } from 'next/navigation'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -40,6 +42,8 @@ const MeetingForm = ({
   onSuccess,
   onCancel
 }: MeetingFormProps) => {
+  const router = useRouter()
+
   const trpc = useTRPC()
   const queryClient = useQueryClient()
 
@@ -59,8 +63,9 @@ const MeetingForm = ({
         await queryClient.invalidateQueries(
           trpc.meetings.getMany.queryOptions({})
         )
-
-        // todo: invalidate free tier usage
+        await queryClient.invalidateQueries(
+          trpc.premium.getFreeUsage.queryOptions()
+        )
 
         onSuccess?.(data.id)
 
@@ -71,7 +76,7 @@ const MeetingForm = ({
           id: 'create-meeting'
         })
 
-        // todo: check if error code is "forbidden"
+        if (error.data?.code === 'FORBIDDEN') router.push('/upgrade')
       }
     })
   )

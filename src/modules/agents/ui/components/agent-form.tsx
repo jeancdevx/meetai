@@ -1,5 +1,7 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -32,6 +34,8 @@ interface AgentFormProps {
 }
 
 const AgentForm = ({ initialValues, onSuccess, onCancel }: AgentFormProps) => {
+  const router = useRouter()
+
   const trpc = useTRPC()
   const queryClient = useQueryClient()
 
@@ -44,8 +48,9 @@ const AgentForm = ({ initialValues, onSuccess, onCancel }: AgentFormProps) => {
         await queryClient.invalidateQueries(
           trpc.agents.getMany.queryOptions({})
         )
-
-        // todo: invalidate free tier usage
+        await queryClient.invalidateQueries(
+          trpc.premium.getFreeUsage.queryOptions()
+        )
 
         onSuccess?.()
 
@@ -56,7 +61,7 @@ const AgentForm = ({ initialValues, onSuccess, onCancel }: AgentFormProps) => {
           id: 'create-agent'
         })
 
-        // todo: check if error code is "forbidden"
+        if (error.data?.code === 'FORBIDDEN') router.push('/upgrade')
       }
     })
   )
