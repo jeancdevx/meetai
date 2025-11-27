@@ -1,13 +1,4 @@
-import {
-  and,
-  count,
-  desc,
-  eq,
-  getTableColumns,
-  ilike,
-  ne,
-  sql
-} from 'drizzle-orm'
+import { and, count, desc, eq, getTableColumns, ilike, ne } from 'drizzle-orm'
 import { z } from 'zod'
 
 import {
@@ -18,7 +9,7 @@ import {
 } from '@/constants'
 
 import { db } from '@/db'
-import { agents } from '@/db/schema'
+import { agents, meetings } from '@/db/schema'
 import {
   createTRPCRouter,
   premiumProcedure,
@@ -36,8 +27,7 @@ export const agentsRouter = createTRPCRouter({
       const [existingAgent] = await db
         .select({
           ...getTableColumns(agents),
-          // todo: replace with actual meeting count
-          meetingCount: sql<number>`5`
+          meetingCount: db.$count(meetings, eq(agents.id, meetings.agentId))
         })
         .from(agents)
         .where(and(eq(agents.id, input.id), eq(agents.userId, userId)))
@@ -66,8 +56,7 @@ export const agentsRouter = createTRPCRouter({
       const data = await db
         .select({
           ...getTableColumns(agents),
-          // todo: replace with actual meeting count
-          meetingCount: sql<number>`1`
+          meetingCount: db.$count(meetings, eq(agents.id, meetings.agentId))
         })
         .from(agents)
         .where(
